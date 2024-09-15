@@ -14,10 +14,10 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        mixedCCA = pkgs.rPackages.buildRPackage {
+        mixedCCAPkg = pkgs.rPackages.buildRPackage {
           name = "mixedCCA";
           src = self;
-          propagatedBuildInputs = with pkgs.rPackages; [
+          nativeBuildInputs = with pkgs.rPackages; [
             MASS
             Matrix
             Rcpp
@@ -32,9 +32,10 @@
         };
       in
       {
-        packages.default = mixedCCA;
+        packages.default = mixedCCAPkg;
         devShells.default = pkgs.mkShell {
-          buildInputs = [ mixedCCA ];
+          buildInputs = [ mixedCCAPkg ];
+          inputsFrom = pkgs.lib.singleton mixedCCAPkg;
         };
       }
     );
